@@ -25,7 +25,7 @@ object Main {
     println(s"Spark version: ${spark.version}")
 
     // Path to input CSV
-    val csvPath = "src/data/exports and imports of india(1997- July 2022).csv"
+    val csvPath = "src/data/exports_and_imports_of_india.csv"
 
     // TASK 1–2: Read dataset
     val df = spark.read
@@ -77,13 +77,24 @@ object Main {
 
     // TASK 10: Save DataFrame to CSV
     println("\nTASK 10 — Write processed DataFrame to CSV:")
-    val outDir = "src/data/output/india_trade_processed"
-    withMean.coalesce(1)
-      .write
-      .mode("overwrite")
-      .option("header", "true")
-      .csv(outDir)
-    println(s"Data written to: $outDir (note: Spark writes part-files and _SUCCESS)")
+
+    import java.io._
+
+    val localOutDir = new File("src/data/output/india_trade_processed")
+    if (!localOutDir.exists()) localOutDir.mkdirs()
+
+    val localOutPath = "src/data/output/india_trade_processed/india_trade_processed.csv"
+
+    // Collecting all rows into local driver memory and write manually
+    val header = withMean.columns.mkString(",")
+    val rows = withMean.collect().map(row => row.toSeq.mkString(","))
+
+    val writer = new BufferedWriter(new FileWriter(localOutPath))
+    writer.write(header + "\n")
+    rows.foreach(r => writer.write(r + "\n"))
+    writer.close()
+
+    println(s"Data written locally to: $localOutPath")
 
     // Clean up
     spark.stop()
