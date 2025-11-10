@@ -6,16 +6,15 @@ object Main {
 
   def main(args: Array[String]): Unit = {
 
-    // Configure logging to suppress INFO/DEBUG spam.
-    // Ensure that src/main/resources/log4j.properties exists.
+    // Configuring logging to suppress INFO/DEBUG spam.
     PropertyConfigurator.configure("src/main/resources/log4j.properties")
 
-    // Initialize SparkSession with explicit local master and host binding
+    // Initializing SparkSession with explicit local master and host binding
     val spark = SparkSession.builder()
       .appName("IndiaTradeAnalysis")
-      .master("local[*]") // Explicitly define local mode
-      .config("spark.driver.bindAddress", "127.0.0.1") // Force loopback address to fix Invalid Spark URL
-      .config("spark.driver.host", "127.0.0.1")        // Prevent host name resolution errors
+      .master("local[*]") // Explicitly defining local mode
+      .config("spark.driver.bindAddress", "127.0.0.1") // Forcing loopback address to fix Invalid Spark URL
+      .config("spark.driver.host", "127.0.0.1")        // Preventing host name resolution errors
       .config("spark.network.timeout", "600s")
       .getOrCreate()
 
