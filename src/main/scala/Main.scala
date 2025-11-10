@@ -25,7 +25,7 @@ object Main {
     println(s"Spark version: ${spark.version}")
 
     // Path to input CSV
-    val csvPath = "src/data/exports_and_imports_of_india.csv"
+    val csvPath = "src/data/exports and imports of india(1997- July 2022).csv"
 
     // TASK 1–2: Read dataset
     val df = spark.read
